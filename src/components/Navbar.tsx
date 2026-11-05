@@ -136,28 +136,15 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Zone 2: Navigation Links (Scrollable if viewport is tight, so it NEVER pushes Zone 3 off-screen) */}
           <nav className="hidden lg:flex items-center gap-1 min-w-0 flex-1 overflow-x-auto no-scrollbar mx-1">
             
-            {/* PUBLIC: Menampilkan Beranda / Quick Count & Panduan */}
+            {/* PUBLIC: Menampilkan Beranda / Quick Count */}
             {!currentUser && (
-              <>
-                <button
-                  onClick={onNavigateHome}
-                  className="flex items-center gap-2 px-3.5 py-2 text-sm font-semibold rounded-lg text-slate-900 bg-slate-100 transition-colors whitespace-nowrap"
-                >
-                  <BarChart3 className="w-4 h-4 text-emerald-600" />
-                  <span>Quick Count & Calon Ketua</span>
-                </button>
-
-                {onOpenGuideModal && (
-                  <button
-                    onClick={onOpenGuideModal}
-                    className="flex items-center gap-2 px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors whitespace-nowrap"
-                    title="Buka Panduan Database Supabase & Deploy Vercel"
-                  >
-                    <BookOpen className="w-4 h-4 text-indigo-600" />
-                    <span>Panduan & Deploy</span>
-                  </button>
-                )}
-              </>
+              <button
+                onClick={onNavigateHome}
+                className="flex items-center gap-2 px-3.5 py-2 text-sm font-semibold rounded-lg text-slate-900 bg-slate-100 transition-colors whitespace-nowrap"
+              >
+                <BarChart3 className="w-4 h-4 text-emerald-600" />
+                <span>Quick Count & Calon Ketua</span>
+              </button>
             )}
 
             {/* PANITIA ROLE LOGGED IN */}
@@ -210,17 +197,6 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <Radio className="w-4 h-4 text-emerald-600" />
                   <span>Monitoring Bilik</span>
                 </button>
-
-                {onOpenGuideModal && (
-                  <button
-                    onClick={onOpenGuideModal}
-                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors whitespace-nowrap shrink-0"
-                    title="Panduan Database Supabase & Deploy"
-                  >
-                    <Database className="w-4 h-4 text-emerald-600" />
-                    <span>Panduan SQL & Deploy</span>
-                  </button>
-                )}
               </>
             )}
 
@@ -306,13 +282,13 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </button>
 
                 <button
-                  onClick={() => onSelectAdminTab('database_guide')}
+                  onClick={() => (onOpenGuideModal ? onOpenGuideModal() : onSelectAdminTab('database_guide'))}
                   className={`flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-bold rounded-lg transition-colors whitespace-nowrap shrink-0 ${
                     currentView === 'admin' && adminTab === 'database_guide'
                       ? 'text-slate-900 bg-slate-100 shadow-xs'
                       : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                   }`}
-                  title="Panduan Database Supabase & Deploy"
+                  title="Panduan Database Supabase & Deploy (Khusus Admin)"
                 >
                   <Database className="w-4 h-4 text-purple-600" />
                   <span>Panduan & Deploy</span>
@@ -329,20 +305,9 @@ export const Navbar: React.FC<NavbarProps> = ({
               {getSessionBadge()}
             </div>
 
-            {/* If NOT logged in: Show "Panduan", "Login Petugas", and "Bilik Suara Siswa" */}
+            {/* If NOT logged in: Show "Login Petugas" and "Bilik Suara Siswa" */}
             {!currentUser ? (
               <>
-                {onOpenGuideModal && (
-                  <button
-                    onClick={onOpenGuideModal}
-                    className="flex items-center gap-1.5 px-2.5 py-1.5 sm:px-3 sm:py-2 text-xs font-bold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 rounded-xl transition-all whitespace-nowrap border border-indigo-200 shadow-xs"
-                    title="Buka Panduan Database Supabase & Deploy Vercel"
-                  >
-                    <BookOpen className="w-3.5 h-3.5 text-indigo-600" />
-                    <span className="hidden sm:inline">Panduan & Deploy</span>
-                    <span className="sm:hidden">Panduan</span>
-                  </button>
-                )}
 
                 <button
                   onClick={onOpenLoginModal}
@@ -437,14 +402,6 @@ export const Navbar: React.FC<NavbarProps> = ({
                 >
                   Monitoring Bilik
                 </button>
-                {onOpenGuideModal && (
-                  <button
-                    onClick={onOpenGuideModal}
-                    className="px-3 py-1 text-xs font-bold rounded-lg whitespace-nowrap bg-indigo-50 text-indigo-700 border border-indigo-200"
-                  >
-                    Panduan & SQL
-                  </button>
-                )}
               </>
             )}
 
@@ -511,7 +468,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   Berita Acara
                 </button>
                 <button
-                  onClick={() => onSelectAdminTab('database_guide')}
+                  onClick={() => (onOpenGuideModal ? onOpenGuideModal() : onSelectAdminTab('database_guide'))}
                   className={`px-3 py-1 text-xs font-bold rounded-lg whitespace-nowrap ${
                     currentView === 'admin' && adminTab === 'database_guide'
                       ? 'bg-slate-900 text-white'

@@ -1498,9 +1498,10 @@ export const AdminSchoolSettings: React.FC<AdminSchoolSettingsProps> = ({
 
       {/* ================= TAB 7: PANDUAN DATABASE & DEPLOY ================= */}
       {activeTab === 'database_guide' && (
-        <div className="pt-2">
-          <SupabaseGuideModal />
-        </div>
+        <SupabaseGuideModal
+          isOpen={true}
+          onClose={() => handleTabClick('school')}
+        />
       )}
 
       {/* Modal Periode (Create / Edit) */}

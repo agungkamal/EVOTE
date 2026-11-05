@@ -83,6 +83,7 @@ export default function App() {
 
   const handleLogout = () => {
     setCurrentUser(null);
+    setIsGuideModalOpen(false);
     setCurrentView('home');
   };
 
@@ -109,7 +110,7 @@ export default function App() {
         activePeriod={activePeriod}
         schoolConfig={schoolConfig}
         onOpenBooth={() => handleOpenBooth()}
-        onOpenGuideModal={() => setIsGuideModalOpen(true)}
+        onOpenGuideModal={currentUser?.role === 'admin' ? () => setIsGuideModalOpen(true) : undefined}
       />
 
       {/* 2. Main Body Content */}
@@ -244,13 +245,17 @@ export default function App() {
               <span className="text-slate-600">Bilik Suara Rahasia & Terenkripsi</span>
               <span>·</span>
               <span className="text-slate-600">Anti Double-Voting</span>
-              <span>·</span>
-              <button
-                onClick={() => setIsGuideModalOpen(true)}
-                className="text-indigo-600 hover:text-indigo-800 font-semibold underline cursor-pointer"
-              >
-                Panduan Database & Deploy
-              </button>
+              {currentUser?.role === 'admin' && (
+                <>
+                  <span>·</span>
+                  <button
+                    onClick={() => setIsGuideModalOpen(true)}
+                    className="text-indigo-600 hover:text-indigo-800 font-semibold underline cursor-pointer"
+                  >
+                    Panduan Database & Deploy
+                  </button>
+                </>
+              )}
               {!currentUser && (
                 <>
                   <span>·</span>
@@ -288,11 +293,13 @@ export default function App() {
         preselectedCandidateId={preselectedCandidateId}
       />
 
-      {/* 6. Supabase Database & Deployment Guide Modal */}
-      <SupabaseGuideModal
-        isOpen={isGuideModalOpen}
-        onClose={() => setIsGuideModalOpen(false)}
-      />
+      {/* 6. Supabase Database & Deployment Guide Modal (Admin Only) */}
+      {currentUser?.role === 'admin' && (
+        <SupabaseGuideModal
+          isOpen={isGuideModalOpen}
+          onClose={() => setIsGuideModalOpen(false)}
+        />
+      )}
 
     </div>
   );

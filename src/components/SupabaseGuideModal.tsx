@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Database,
   Copy,
@@ -43,6 +43,18 @@ export const SupabaseGuideModal: React.FC<SupabaseGuideModalProps> = ({ isOpen, 
     type: 'success' | 'error' | 'warning';
     message: string;
   } | null>(null);
+
+  // Close on Escape key when rendered as popup
+  useEffect(() => {
+    if (!isOpen || !onClose) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
 
   // If used as controlled modal and isOpen is false, don't render
   if (isOpen === false) return null;
@@ -148,7 +160,7 @@ export const SupabaseGuideModal: React.FC<SupabaseGuideModalProps> = ({ isOpen, 
         <div className="flex items-center gap-2 shrink-0">
           <button
             onClick={handleCopySql}
-            className="flex items-center gap-2 px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-all shadow-md active:scale-95 shrink-0"
+            className="flex items-center gap-2 px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-all shadow-md active:scale-95 shrink-0 cursor-pointer"
           >
             {copiedSql ? (
               <>
@@ -162,16 +174,6 @@ export const SupabaseGuideModal: React.FC<SupabaseGuideModalProps> = ({ isOpen, 
               </>
             )}
           </button>
-
-          {onClose && (
-            <button
-              onClick={onClose}
-              className="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-xl transition-colors"
-              title="Tutup"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          )}
         </div>
       </div>
 
@@ -504,14 +506,50 @@ export const SupabaseGuideModal: React.FC<SupabaseGuideModalProps> = ({ isOpen, 
   // If opened as modal overlay:
   if (isOpen) {
     return (
-      <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6 animate-in fade-in duration-200">
-        <div className="bg-slate-50 rounded-3xl border border-slate-300 shadow-2xl max-w-5xl w-full max-h-[92vh] overflow-y-auto p-4 sm:p-8">
+      <div
+        onClick={onClose}
+        className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6 animate-in fade-in duration-200"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Panduan Database Supabase & Deploy Web"
+      >
+        <div
+          onClick={(e) => e.stopPropagation()}
+          className="relative bg-slate-50 rounded-3xl border border-slate-300 shadow-2xl max-w-5xl w-full max-h-[92vh] overflow-y-auto p-4 sm:p-8"
+        >
+          {onClose && (
+            <div className="sticky top-0 z-20 flex justify-end mb-2 pointer-events-none">
+              <button
+                type="button"
+                onClick={onClose}
+                className="pointer-events-auto inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white/95 hover:bg-rose-50 text-slate-700 hover:text-rose-700 border border-slate-300 hover:border-rose-300 shadow-md text-xs font-bold transition-all cursor-pointer"
+                title="Tutup Jendela Panduan"
+              >
+                <X className="w-4 h-4" />
+                <span>Tutup</span>
+              </button>
+            </div>
+          )}
+
           {content}
+
+          {onClose && (
+            <div className="mt-6 pt-4 border-t border-slate-200 flex justify-end">
+              <button
+                type="button"
+                onClick={onClose}
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition-colors shadow-xs cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+                <span>Tutup Panduan</span>
+              </button>
+            </div>
+          )}
         </div>
       </div>
     );
   }
 
-  // Otherwise rendered inline (e.g. inside AdminSchoolSettings)
+  // Otherwise rendered inline
   return content;
 };

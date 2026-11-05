@@ -45,7 +45,6 @@ import { votingStore } from '../services/storage.ts';
 import { ConfirmModal } from './ConfirmModal';
 import { Toast } from './Toast';
 import { ResetIndividualVoteModal } from './ResetIndividualVoteModal';
-import { SupabaseGuideModal } from './SupabaseGuideModal';
 import {
   downloadDptExcelTemplate,
   downloadDptCsvTemplate,
@@ -78,7 +77,6 @@ export const CommitteeDashboard: React.FC<CommitteeDashboardProps> = ({
 }) => {
   const [internalTab, setInternalTab] = useState<CommitteeTab>('dpt');
   const activeTab = selectedTab || internalTab;
-  const [showGuideModal, setShowGuideModal] = useState(false);
 
   const handleTabClick = (tab: CommitteeTab) => {
     if (onTabChange) {
@@ -716,15 +714,6 @@ export const CommitteeDashboard: React.FC<CommitteeDashboardProps> = ({
               <span>TUTUP</span>
             </button>
           </div>
-
-          <button
-            onClick={() => setShowGuideModal(true)}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 active:bg-indigo-200 border border-indigo-200 transition-all shadow-xs cursor-pointer shrink-0"
-            title="Buka Panduan Database Supabase & Deploy Vercel"
-          >
-            <Database className="w-3.5 h-3.5 text-indigo-600" />
-            <span>Panduan & SQL</span>
-          </button>
 
           {onLogout && (
             <button
@@ -2791,12 +2780,6 @@ export const CommitteeDashboard: React.FC<CommitteeDashboardProps> = ({
         type={toast.type}
         message={toast.message}
         onClose={() => setToast((prev) => ({ ...prev, isOpen: false }))}
-      />
-
-      {/* Supabase Database & Deploy Guide Modal */}
-      <SupabaseGuideModal
-        isOpen={showGuideModal}
-        onClose={() => setShowGuideModal(false)}
       />
 
     </div>
