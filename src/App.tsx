@@ -8,14 +8,16 @@ import { CommitteeDashboard, CommitteeTab } from './components/CommitteeDashboar
 import { AdminSchoolSettings, AdminTab } from './components/AdminSchoolSettings';
 import { LoginModal } from './components/LoginModal';
 import { SupabaseGuideModal } from './components/SupabaseGuideModal';
+import { HowToVoteModal } from './components/HowToVoteModal';
 import type { AuthStaffUser } from './types/index.ts';
-import { Vote, Sparkles, LogIn } from 'lucide-react';
+import { Vote, Sparkles, LogIn, BookOpen } from 'lucide-react';
 
 export default function App() {
   // Authentication & Roles
   const [currentUser, setCurrentUser] = useState<AuthStaffUser | null>(null);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isGuideModalOpen, setIsGuideModalOpen] = useState(false);
+  const [isHowToVoteOpen, setIsHowToVoteOpen] = useState(false);
 
   // View state: 'home' (public quick count & paslon), 'committee', or 'admin'
   const [currentView, setCurrentView] = useState<'home' | 'committee' | 'admin'>('home');
@@ -125,6 +127,7 @@ export default function App() {
               activePeriod={activePeriod}
               schoolConfig={schoolConfig}
               onOpenBooth={() => handleOpenBooth()}
+              onOpenHowToVote={() => setIsHowToVoteOpen(true)}
             />
 
             {/* Candidates Section */}
@@ -143,7 +146,7 @@ export default function App() {
                   </p>
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                   {!currentUser && (
                     <button
                       onClick={() => setIsLoginModalOpen(true)}
@@ -153,6 +156,15 @@ export default function App() {
                       <span>Login Petugas</span>
                     </button>
                   )}
+
+                  <button
+                    type="button"
+                    onClick={() => setIsHowToVoteOpen(true)}
+                    className="px-3.5 py-2 text-xs font-bold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 rounded-xl border border-indigo-200 transition-colors flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <BookOpen className="w-3.5 h-3.5" />
+                    <span>Cara Memilih</span>
+                  </button>
 
                   <button
                     onClick={() => handleOpenBooth()}
@@ -293,7 +305,16 @@ export default function App() {
         preselectedCandidateId={preselectedCandidateId}
       />
 
-      {/* 6. Supabase Database & Deployment Guide Modal (Admin Only) */}
+      {/* 6. How To Vote Guide Modal */}
+      <HowToVoteModal
+        isOpen={isHowToVoteOpen}
+        onClose={() => setIsHowToVoteOpen(false)}
+        activePeriod={activePeriod}
+        schoolConfig={schoolConfig}
+        onOpenBooth={() => handleOpenBooth()}
+      />
+
+      {/* 7. Supabase Database & Deployment Guide Modal (Admin Only) */}
       {currentUser?.role === 'admin' && (
         <SupabaseGuideModal
           isOpen={isGuideModalOpen}

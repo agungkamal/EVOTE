@@ -1397,7 +1397,7 @@ export const CommitteeDashboard: React.FC<CommitteeDashboardProps> = ({
                   ? 'bg-teal-50 text-teal-700 border-teal-200'
                   : 'bg-blue-50 text-blue-700 border-blue-200';
 
-                const idLabel = isGuru ? 'NIP / NUPTK' : isTu ? 'NIP / ID PEGAWAI' : 'NISN';
+                const idLabel = 'NOMOR INDUK PEMILIH';
 
                 return (
                   <div
@@ -1454,7 +1454,7 @@ export const CommitteeDashboard: React.FC<CommitteeDashboardProps> = ({
 
                       <div className="grid grid-cols-2 gap-2 pt-2 border-t border-dashed border-slate-200">
                         <div>
-                          <span className="text-[9px] text-slate-400 uppercase font-semibold block">{idLabel}</span>
+                          <span className="text-[9px] text-slate-400 uppercase font-semibold block leading-tight">{idLabel}</span>
                           <span className="font-mono font-bold text-slate-900 text-xs block truncate" title={std.nisn}>
                             {std.nisn}
                           </span>

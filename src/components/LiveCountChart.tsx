@@ -20,12 +20,14 @@ interface LiveCountChartProps {
   activePeriod: ElectionPeriod;
   schoolConfig: SchoolConfig;
   onOpenBooth: () => void;
+  onOpenHowToVote?: () => void;
 }
 
 export const LiveCountChart: React.FC<LiveCountChartProps> = ({
   activePeriod,
   schoolConfig,
   onOpenBooth,
+  onOpenHowToVote,
 }) => {
   const stats = votingStore.getElectionStats(activePeriod.id);
   const auditLogs = votingStore.getAuditLogs().slice(0, 5);
@@ -91,11 +93,22 @@ export const LiveCountChart: React.FC<LiveCountChartProps> = ({
             <div className="pt-2 flex flex-wrap items-center gap-3">
               <button
                 onClick={onOpenBooth}
-                className="px-5 py-2.5 text-sm font-bold text-slate-900 bg-emerald-400 hover:bg-emerald-300 rounded-xl transition-all shadow-md active:scale-95 flex items-center gap-2"
+                className="px-5 py-2.5 text-sm font-bold text-slate-900 bg-emerald-400 hover:bg-emerald-300 rounded-xl transition-all shadow-md active:scale-95 flex items-center gap-2 cursor-pointer"
               >
                 <Vote className="w-4 h-4" />
                 <span>Gunakan Hak Suara (Bilik Digital)</span>
               </button>
+
+              {onOpenHowToVote && (
+                <button
+                  type="button"
+                  onClick={onOpenHowToVote}
+                  className="px-4 py-2.5 text-sm font-bold text-white bg-slate-800 hover:bg-slate-700 border border-slate-600/80 hover:border-slate-500 rounded-xl transition-all shadow-sm active:scale-95 flex items-center gap-2 cursor-pointer"
+                >
+                  <BookOpen className="w-4 h-4 text-emerald-400" />
+                  <span>Cara Memilih</span>
+                </button>
+              )}
 
               <div className="text-xs text-slate-400 flex items-center gap-2 py-2 px-3 rounded-lg bg-slate-800/60 border border-slate-700">
                 <Clock className="w-3.5 h-3.5 text-slate-400" />

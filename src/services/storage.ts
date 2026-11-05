@@ -304,6 +304,48 @@ class VotingStore {
     }
   }
 
+  private async fetchAllRows<T = any>(
+    supabase: NonNullable<ReturnType<typeof getSupabaseClient>>,
+    table: string,
+    orderCol: string,
+    ascending = true
+  ): Promise<{ data: T[]; error: any }> {
+    const pageSize = 1000;
+    let from = 0;
+    const allRows: T[] = [];
+
+    while (true) {
+      const { data, error } = await supabase
+        .from(table)
+        .select('*')
+        .order(orderCol, { ascending })
+        .range(from, from + pageSize - 1);
+
+      if (error) {
+        return { data: allRows, error };
+      }
+
+      if (!data || data.length === 0) {
+        break;
+      }
+
+      allRows.push(...(data as T[]));
+      if (data.length < pageSize) {
+        break;
+      }
+      from += pageSize;
+    }
+
+    return { data: allRows, error: null };
+  }
+
+  public async syncNow(): Promise<boolean> {
+    if (isSupabaseConfigured()) {
+      return this.fetchFromSupabase(false);
+    }
+    return this.fetchFromServer(false);
+  }
+
   public async fetchFromSupabase(isBackgroundPoll = false): Promise<boolean> {
     const supabase = getSupabaseClient();
     if (!supabase || this.isSyncing) return false;
@@ -323,8 +365,8 @@ class VotingStore {
         supabase.from('school_config').select('*').limit(1),
         supabase.from('periods').select('*').order('created_at', { ascending: false }),
         supabase.from('candidates').select('*').order('candidate_number', { ascending: true }),
-        supabase.from('students').select('*').order('created_at', { ascending: true }),
-        supabase.from('votes').select('*').order('created_at', { ascending: true }),
+        this.fetchAllRows(supabase, 'students', 'created_at', true),
+        this.fetchAllRows(supabase, 'votes', 'created_at', true),
         supabase.from('committees').select('*').order('created_at', { ascending: true }),
         supabase.from('app_users').select('*').order('created_at', { ascending: true }),
         supabase.from('audit_logs').select('*').order('timestamp', { ascending: false }).limit(100),

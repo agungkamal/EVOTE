@@ -87,30 +87,41 @@ export const VoterBoothModal: React.FC<VoterBoothModalProps> = ({
   if (!isOpen) return null;
 
   // Handle Login
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg('');
 
-    if (activePeriod.voting_session_status !== 'OPEN') {
+    if (!nisn.trim() || !pin.trim()) {
+      setErrorMsg('Mohon masukkan Nomor Induk Pemilih dan PIN 6-Digit Anda.');
+      return;
+    }
+
+    let latestStudents = allStudents;
+    let student = latestStudents.find(
+      (s) => s.nisn.trim() === nisn.trim() && s.pin.trim() === pin.trim()
+    );
+
+    // If not found or session not open locally yet, pull freshest state from cloud/server
+    if (!student || activePeriod.voting_session_status !== 'OPEN') {
+      await votingStore.syncNow();
+      latestStudents = votingStore.getStudents(votingStore.getActivePeriod().id);
+      student = latestStudents.find(
+        (s) => s.nisn.trim() === nisn.trim() && s.pin.trim() === pin.trim()
+      );
+    }
+
+    const currentPeriod = votingStore.getActivePeriod();
+    if (currentPeriod.voting_session_status !== 'OPEN') {
       setErrorMsg(
-        activePeriod.voting_session_status === 'PAUSED'
+        currentPeriod.voting_session_status === 'PAUSED'
           ? 'Bilik suara sedang dijeda sementara oleh panitia. Mohon tunggu.'
           : 'Sesi pemilihan telah ditutup. Bilik suara tidak lagi melayani pemilihan.'
       );
       return;
     }
 
-    if (!nisn.trim() || !pin.trim()) {
-      setErrorMsg('Mohon masukkan NISN dan PIN 6-Digit Anda.');
-      return;
-    }
-
-    const student = allStudents.find(
-      (s) => s.nisn.trim() === nisn.trim() && s.pin.trim() === pin.trim()
-    );
-
     if (!student) {
-      setErrorMsg('NISN atau PIN tidak cocok. Silakan periksa kartu pemilih Anda.');
+      setErrorMsg('Nomor Induk Pemilih atau PIN tidak cocok. Silakan periksa kartu pemilih Anda.');
       return;
     }
 
@@ -222,7 +233,7 @@ export const VoterBoothModal: React.FC<VoterBoothModalProps> = ({
                   Autentikasi Pemilih Digital
                 </h3>
                 <p className="text-xs text-slate-500">
-                  Masukkan NISN/NIP dan PIN rahasia 6-digit yang tercantum pada Kartu Pemilih Anda.
+                  Masukkan Nomor Induk Pemilih dan PIN rahasia 6-digit yang tercantum pada Kartu Pemilih Anda.
                 </p>
               </div>
 
@@ -249,7 +260,7 @@ export const VoterBoothModal: React.FC<VoterBoothModalProps> = ({
               <form onSubmit={handleLogin} className="space-y-4">
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
-                    Nomor Induk Pemilih (NISN Siswa / NIP Guru & Staf)
+                    NOMOR INDUK PEMILIH
                   </label>
                   <div className="relative">
                     <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -257,7 +268,7 @@ export const VoterBoothModal: React.FC<VoterBoothModalProps> = ({
                       type="text"
                       value={nisn}
                       onChange={(e) => setNisn(e.target.value)}
-                      placeholder="Masukkan NISN Siswa atau NIP Guru / Staf"
+                      placeholder="Masukkan Nomor Induk Pemilih"
                       className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900 font-mono"
                       required
                     />
@@ -299,7 +310,7 @@ export const VoterBoothModal: React.FC<VoterBoothModalProps> = ({
                   <span>Petunjuk Bilik Suara Digital</span>
                 </div>
                 <ul className="text-[11px] space-y-1.5 text-slate-500 list-disc list-inside">
-                  <li>Masukkan <strong>NISN / NIP</strong> dan <strong>PIN 6-Digit</strong> dari Kartu Pemilih resmi Anda.</li>
+                  <li>Masukkan <strong>NOMOR INDUK PEMILIH</strong> dan <strong>PIN 6-Digit</strong> dari Kartu Pemilih resmi Anda.</li>
                   <li>Kredensial hanya dapat digunakan <strong>1 kali</strong> dan terlindungi sistem anti double-voting.</li>
                   <li>Pilihan surat suara bersifat rahasia dan langsung masuk ke kotak suara digital.</li>
                   <li>Jika ada kendala kredensial atau salah input, segera laporkan ke Pengawas TPS.</li>
@@ -321,7 +332,7 @@ export const VoterBoothModal: React.FC<VoterBoothModalProps> = ({
                 const barBorder = isGuru ? 'border-purple-300 bg-purple-50/70' : isTu ? 'border-teal-300 bg-teal-50/70' : 'border-emerald-200 bg-emerald-50';
                 const iconColor = isGuru ? 'bg-purple-600' : isTu ? 'bg-teal-600' : 'bg-emerald-600';
                 const catLabel = isGuru ? 'Dewan Guru' : isTu ? 'Staf Tata Usaha' : 'Siswa';
-                const idLabel = isGuru ? 'NIP' : isTu ? 'NIP' : 'NISN';
+                const idLabel = 'NOMOR INDUK PEMILIH';
 
                 return (
                   <div className={`rounded-2xl p-4 border ${barBorder} flex flex-col sm:flex-row sm:items-center justify-between gap-3`}>
