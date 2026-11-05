@@ -222,12 +222,12 @@ export default function App() {
       </main>
 
       {/* 3. Global Footer */}
-      <footer className="bg-white border-t border-slate-200 mt-12 py-8 transition-colors no-print">
+      <footer className="bg-white border-t border-slate-200 mt-12 py-7 transition-colors no-print">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-4 pb-5 border-b border-slate-100 text-xs text-slate-500">
             
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center text-white shadow-xs overflow-hidden p-1 border border-slate-700/60 shrink-0">
+            <div className="flex flex-col sm:flex-row items-center text-center sm:text-left gap-3">
+              <div className="w-11 h-11 rounded-xl bg-slate-900 flex items-center justify-center text-white shadow-xs overflow-hidden p-1 border border-slate-700/60 shrink-0">
                 {schoolConfig.logo_url ? (
                   <img
                     src={schoolConfig.logo_url}
@@ -242,35 +242,37 @@ export default function App() {
                 )}
               </div>
               <div>
-                <p className="font-bold text-slate-800 text-sm">
+                <p className="font-bold text-slate-900 text-sm leading-snug">
                   {schoolConfig.school_name}
                 </p>
-                <p className="text-[11px] text-slate-400">
-                  Logo E-Voting {schoolConfig.organization_type} · Sistem Pemilihan Ketua Multi-Periode Berbasis Web
+                <p className="text-xs text-slate-500 mt-0.5">
+                  {schoolConfig.organization_type === 'OSIM'
+                    ? 'E-Voting OSIM · Sistem Pemilihan Ketua Osim Digital'
+                    : 'E-Voting OSIS · Sistem Pemilihan Ketua Osis Digital'}
                 </p>
               </div>
             </div>
 
-            <div className="flex flex-wrap items-center justify-center gap-4 text-xs">
-              <span className="text-slate-600 font-medium">Asas LUBER JURDIL</span>
-              <span>·</span>
-              <span className="text-slate-600">Bilik Suara Rahasia & Terenkripsi</span>
-              <span>·</span>
-              <span className="text-slate-600">Anti Double-Voting</span>
+            <div className="flex flex-wrap items-center justify-center lg:justify-end gap-x-3 gap-y-2 text-xs text-slate-600">
+              <span className="font-medium text-slate-700">Asas LUBER JURDIL</span>
+              <span className="text-slate-300" aria-hidden="true">·</span>
+              <span>Bilik Suara Rahasia &amp; Terenkripsi</span>
+              <span className="text-slate-300" aria-hidden="true">·</span>
+              <span>Anti Double-Voting</span>
               {currentUser?.role === 'admin' && (
                 <>
-                  <span>·</span>
+                  <span className="text-slate-300" aria-hidden="true">·</span>
                   <button
                     onClick={() => setIsGuideModalOpen(true)}
                     className="text-indigo-600 hover:text-indigo-800 font-semibold underline cursor-pointer"
                   >
-                    Panduan Database & Deploy
+                    Panduan Database &amp; Deploy
                   </button>
                 </>
               )}
               {!currentUser && (
                 <>
-                  <span>·</span>
+                  <span className="text-slate-300" aria-hidden="true">·</span>
                   <button
                     onClick={() => setIsLoginModalOpen(true)}
                     className="text-slate-700 hover:text-slate-900 font-semibold underline cursor-pointer"
@@ -279,12 +281,17 @@ export default function App() {
                   </button>
                 </>
               )}
+              <span className="px-2.5 py-1 rounded-lg bg-slate-100 border border-slate-200/80 text-[11px] text-slate-600 font-mono font-semibold whitespace-nowrap shrink-0">
+                Masa Bakti {activePeriod.year_label}
+              </span>
             </div>
 
-            <div className="text-[11px] text-slate-400 font-mono">
-              Masa Bakti {activePeriod.year_label}
-            </div>
+          </div>
 
+          <div className="pt-4 flex items-center justify-center text-center">
+            <p className="text-xs text-slate-500">
+              Designed &amp; Developed by <span className="font-bold text-slate-800">AK97</span>
+            </p>
           </div>
         </div>
       </footer>
