@@ -1,7 +1,7 @@
 import type { ElectionPeriod, Candidate, Student, Vote, Committee, SchoolConfig, AuditLog, UserAccount } from '../types/index.ts';
 
 export const INITIAL_SCHOOL_CONFIG: SchoolConfig = {
-  school_name: 'SMA Negeri 1 Harapan Bangsa',
+  school_name: 'SMKS PGRI 2 PALIMANAN',
   organization_type: 'OSIS',
   logo_url: '/assets/images/school_emblem_logo_1793677969399.jpg',
   school_address: 'Jl. Pendidikan Merdeka No. 45, Jakarta Pusat',
@@ -14,7 +14,7 @@ export const INITIAL_PERIODS: ElectionPeriod[] = [
     year_label: '2026/2027',
     is_active: true,
     organization_type: 'OSIS',
-    school_name: 'SMA Negeri 1 Harapan Bangsa',
+    school_name: 'SMKS PGRI 2 PALIMANAN',
     voting_session_status: 'OPEN',
     start_date: '2026-11-03T07:30:00Z',
     end_date: '2026-11-03T15:00:00Z',
@@ -25,7 +25,7 @@ export const INITIAL_PERIODS: ElectionPeriod[] = [
     year_label: '2025/2026',
     is_active: false,
     organization_type: 'OSIS',
-    school_name: 'SMA Negeri 1 Harapan Bangsa',
+    school_name: 'SMKS PGRI 2 PALIMANAN',
     voting_session_status: 'CLOSED',
     start_date: '2025-11-05T07:30:00Z',
     end_date: '2025-11-05T15:00:00Z',

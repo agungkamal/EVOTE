@@ -277,7 +277,7 @@ export const CommitteeDashboard: React.FC<CommitteeDashboardProps> = ({
     setConfirmModal({
       isOpen: true,
       title: 'Hapus Seluruh Data DPT',
-      message: `PERINGATAN KERAS:\nApakah Anda yakin ingin MENGHAPUS SEMUA DATA DPT (${students.length} pemilih) pada periode ${activePeriod.year_label}?\n\nSemua data pemilih, NISN/NIP, nama, kelas, status hak pilih, dan PIN kredensial akan dihapus permanen.`,
+      message: `PERINGATAN KERAS:\nApakah Anda yakin ingin MENGHAPUS SEMUA DATA DPT (${students.length} pemilih) pada periode ${activePeriod.year_label}?\n\nSemua data pemilih, Nomor Induk Pemilih, nama, kelas, status hak pilih, dan PIN kredensial akan dihapus permanen.`,
       confirmLabel: 'Ya, Hapus Semua DPT',
       cancelLabel: 'Batal',
       variant: 'danger',
@@ -506,7 +506,7 @@ export const CommitteeDashboard: React.FC<CommitteeDashboardProps> = ({
     }
 
     if (parsed.length === 0) {
-      showToast('error', 'Format CSV tidak dikenali. Pastikan berformat: NISN/NIP, Nama, Kelas/Jabatan, Kategori');
+      showToast('error', 'Format CSV tidak dikenali. Pastikan berformat: NOMOR INDUK PEMILIH, Nama, Kelas/Jabatan, Kategori');
       return;
     }
 
@@ -561,7 +561,7 @@ export const CommitteeDashboard: React.FC<CommitteeDashboardProps> = ({
     const res = votingStore.bulkImportStudents(payload, activePeriod.id);
     showToast(
       'success',
-      `Hasil Import: ${res.added} pemilih berhasil dimasukkan ke DPT! (${res.skipped} data dengan NISN/NIP duplikat dilewati).`
+      `Hasil Import: ${res.added} pemilih berhasil dimasukkan ke DPT! (${res.skipped} data dengan Nomor Induk Pemilih duplikat dilewati).`
     );
     setExcelFile(null);
     setExcelParsedData(null);
@@ -845,7 +845,7 @@ export const CommitteeDashboard: React.FC<CommitteeDashboardProps> = ({
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Cari nama pemilih, NISN, atau NIP..."
+                  placeholder="Cari nama pemilih atau Nomor Induk Pemilih..."
                   className="w-full pl-9 pr-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-900 font-mono"
                 />
               </div>
@@ -1015,7 +1015,7 @@ export const CommitteeDashboard: React.FC<CommitteeDashboardProps> = ({
                       />
                     </th>
                     <th className="py-3 px-3 w-12">No</th>
-                    <th className="py-3 px-4">NISN / NIP</th>
+                    <th className="py-3 px-4">NOMOR INDUK PEMILIH</th>
                     <th className="py-3 px-4">Nama Pemilih</th>
                     <th className="py-3 px-4">Kategori</th>
                     <th className="py-3 px-4">Kelas / Jabatan</th>
@@ -1317,13 +1317,13 @@ export const CommitteeDashboard: React.FC<CommitteeDashboardProps> = ({
 
             </div>
 
-            {/* Pencarian nama atau NISN */}
+            {/* Pencarian nama atau Nomor Induk Pemilih */}
             <div className="flex items-center gap-2 flex-1 md:max-w-xs">
               <div className="relative w-full">
                 <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
-                  placeholder="Cari nama, NISN, atau NIP kartu..."
+                  placeholder="Cari nama atau Nomor Induk Pemilih kartu..."
                   value={cardSearchQuery}
                   onChange={(e) => setCardSearchQuery(e.target.value)}
                   className="w-full pl-8 pr-3 py-1.5 rounded-xl border border-slate-300 bg-white font-mono text-xs focus:outline-none focus:ring-2 focus:ring-slate-900"
@@ -1837,7 +1837,7 @@ export const CommitteeDashboard: React.FC<CommitteeDashboardProps> = ({
                 type="text"
                 value={monitoringSearchQuery}
                 onChange={(e) => setMonitoringSearchQuery(e.target.value)}
-                placeholder="Ketik NISN / NIP atau Nama Pemilih untuk mencari dan reset hak suara..."
+                placeholder="Ketik Nomor Induk Pemilih atau Nama Pemilih untuk mencari dan reset hak suara..."
                 className="w-full pl-10 pr-4 py-2.5 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-900 font-mono"
               />
             </div>
@@ -1936,7 +1936,7 @@ export const CommitteeDashboard: React.FC<CommitteeDashboardProps> = ({
               );
             })() : (
               <p className="text-[11px] text-slate-400">
-                Ketik NISN siswa, NIP guru/staf, atau nama pemilih untuk mencari secara instan dan mereset status voting.
+                Ketik Nomor Induk Pemilih atau nama pemilih untuk mencari secara instan dan mereset status voting.
               </p>
             )}
           </div>
@@ -2018,11 +2018,7 @@ export const CommitteeDashboard: React.FC<CommitteeDashboardProps> = ({
 
               <div>
                 <label className="block text-slate-600 font-bold mb-1">
-                  {newStudent.voter_type === 'GURU'
-                    ? 'NIP / NUPTK / ID Dewan Guru'
-                    : newStudent.voter_type === 'TATA_USAHA'
-                    ? 'NIP / ID Pegawai Tata Usaha'
-                    : 'NISN (Nomor Induk Siswa Nasional)'}
+                  NOMOR INDUK PEMILIH
                 </label>
                 <input
                   type="text"
@@ -2160,7 +2156,7 @@ export const CommitteeDashboard: React.FC<CommitteeDashboardProps> = ({
                   <span>Template Resmi Excel DPT</span>
                 </div>
                 <p className="text-[11px] text-emerald-800/80 leading-relaxed">
-                  Unduh template format resmi dengan kolom NISN/NIP, Nama, Kelas/Jabatan, dan Kategori Pemilih.
+                  Unduh template format resmi dengan kolom NOMOR INDUK PEMILIH, Nama, Kelas/Jabatan, dan Kategori Pemilih.
                 </p>
               </div>
 
@@ -2337,7 +2333,7 @@ export const CommitteeDashboard: React.FC<CommitteeDashboardProps> = ({
                           <thead className="bg-slate-50 text-[10px] uppercase font-bold text-slate-500 border-b border-slate-200">
                             <tr>
                               <th className="py-2 px-3">No</th>
-                              <th className="py-2 px-3">NISN / NIP</th>
+                              <th className="py-2 px-3">NOMOR INDUK PEMILIH</th>
                               <th className="py-2 px-3">Nama Pemilih</th>
                               <th className="py-2 px-3">Kelas / Jabatan</th>
                               <th className="py-2 px-3">Kategori</th>
@@ -2386,7 +2382,7 @@ export const CommitteeDashboard: React.FC<CommitteeDashboardProps> = ({
                 <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-600 space-y-1">
                   <span className="font-bold text-slate-800">Format Kolom (Dipisahkan koma atau tab):</span>
                   <p className="font-mono text-[11px] text-slate-500">
-                    NISN/NIP, Nama Pemilih, Kelas/Jabatan, Kategori (SISWA / GURU / TATA_USAHA)<br />
+                    NOMOR INDUK PEMILIH, Nama Pemilih, Kelas/Jabatan, Kategori (SISWA / GURU / TATA_USAHA)<br />
                     0061234501, Budi Santoso, X-MIPA-1, SISWA<br />
                     197808152005011003, Drs. H. Ahmad Dahlan, Guru Fisika, GURU<br />
                     198409102009022004, Endang Sulastri, Staf Administrasi, TATA_USAHA
@@ -2406,7 +2402,7 @@ export const CommitteeDashboard: React.FC<CommitteeDashboardProps> = ({
             {/* Modal Action Buttons Footer */}
             <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 border-t border-slate-100">
               <div className="text-[11px] text-slate-400">
-                Data dengan NISN/NIP duplikat akan dilewati otomatis demi keamanan.
+                Data dengan Nomor Induk Pemilih duplikat akan dilewati otomatis demi keamanan.
               </div>
 
               <div className="flex items-center gap-2 w-full sm:w-auto justify-end">

@@ -477,8 +477,17 @@ class VotingStore {
   }
 
   private sanitizeLoadedData<T>(key: string, data: any): T {
-    if (key === STORAGE_KEYS.SCHOOL_CONFIG && data?.logo_url) {
-      data.logo_url = normalizeAssetUrl(data.logo_url);
+    if (key === STORAGE_KEYS.SCHOOL_CONFIG && data) {
+      if (data.logo_url) data.logo_url = normalizeAssetUrl(data.logo_url);
+      if (data.school_name && data.school_name.includes('Harapan Bangsa')) {
+        data.school_name = 'SMKS PGRI 2 PALIMANAN';
+      }
+    } else if (key === STORAGE_KEYS.PERIODS && Array.isArray(data)) {
+      data.forEach((p) => {
+        if (p.school_name && p.school_name.includes('Harapan Bangsa')) {
+          p.school_name = 'SMKS PGRI 2 PALIMANAN';
+        }
+      });
     } else if (key === STORAGE_KEYS.CANDIDATES && Array.isArray(data)) {
       data.forEach((c) => {
         if (c.photo_url) c.photo_url = normalizeAssetUrl(c.photo_url);
@@ -944,7 +953,7 @@ class VotingStore {
 
     const exists = all.find((s) => s.period_id === targetPeriod && s.nisn === studentData.nisn.trim());
     if (exists) {
-      return { success: false, message: `Nomor Induk (NISN/NIP) ${studentData.nisn} sudah terdaftar pada periode ini (${exists.name}).` };
+      return { success: false, message: `Nomor Induk Pemilih ${studentData.nisn} sudah terdaftar pada periode ini (${exists.name}).` };
     }
 
     const voterType: VoterCategory = studentData.voter_type || 'SISWA';
@@ -1298,7 +1307,7 @@ class VotingStore {
     );
 
     if (!student) {
-      return { success: false, message: 'Nomor Induk (NISN/NIP) tidak terdaftar dalam Daftar Pemilih Tetap (DPT) periode ini.' };
+      return { success: false, message: 'Nomor Induk Pemilih tidak terdaftar dalam Daftar Pemilih Tetap (DPT) periode ini.' };
     }
 
     if (student.pin.trim() !== cleanPin) {

@@ -27,7 +27,7 @@ export interface ParseExcelResult {
  */
 export function downloadDptExcelTemplate(orgType: string = 'OSIS', schoolName: string = 'SMA / SMK / MA'): void {
   // 1. Data Sheet
-  const header = ['NISN_NIP', 'NAMA_LENGKAP', 'KELAS_JABATAN', 'KATEGORI_PEMILIH'];
+  const header = ['NOMOR_INDUK_PEMILIH', 'NAMA_LENGKAP', 'KELAS_JABATAN', 'KATEGORI_PEMILIH'];
   const sampleData = [
     header,
     ['0061234501', 'Ahmad Rizky Pratama', 'X-MIPA-1', 'SISWA'],
@@ -59,7 +59,7 @@ export function downloadDptExcelTemplate(orgType: string = 'OSIS', schoolName: s
     [''],
     ['KOLOM', 'KEBUTUHAN', 'CONTOH NILAI', 'KETERANGAN'],
     [
-      'NISN_NIP',
+      'NOMOR_INDUK_PEMILIH',
       'Wajib Diisi (Unik)',
       '0061234501 atau 198506122010011002',
       'Nomor Induk Siswa Nasional untuk siswa, atau NIP/NUPTK/ID Pegawai untuk Guru dan Staf TU. Digunakan sebagai Username login bilik suara.',
@@ -85,7 +85,7 @@ export function downloadDptExcelTemplate(orgType: string = 'OSIS', schoolName: s
     [''],
     ['CATATAN KEAMANAN & KREDENSIAL:'],
     ['1. PIN 6-digit rahasia pemilih akan digenerate otomatis secara acak & terenkripsi oleh sistem saat proses import.'],
-    ['2. Data dengan NISN/NIP yang sudah terdaftar pada periode ini akan dilewati otomatis untuk mencegah data ganda.'],
+    ['2. Data dengan Nomor Induk Pemilih yang sudah terdaftar pada periode ini akan dilewati otomatis untuk mencegah data ganda.'],
     ['3. Simpan file sebagai format .xlsx, .xls, atau .csv lalu upload pada menu "Upload Excel DPT".'],
   ];
 
@@ -111,7 +111,7 @@ export function downloadDptExcelTemplate(orgType: string = 'OSIS', schoolName: s
  */
 export function downloadDptCsvTemplate(): void {
   const csvContent =
-    'NISN_NIP,NAMA_LENGKAP,KELAS_JABATAN,KATEGORI_PEMILIH\n' +
+    'NOMOR_INDUK_PEMILIH,NAMA_LENGKAP,KELAS_JABATAN,KATEGORI_PEMILIH\n' +
     '0061234501,Ahmad Rizky Pratama,X-MIPA-1,SISWA\n' +
     '0061234502,Bunga Citra Lestari,X-MIPA-1,SISWA\n' +
     '0058765403,Dimas Arya Pamungkas,XI-IPS-2,SISWA\n' +
@@ -188,14 +188,14 @@ export async function parseDptExcelFile(file: File): Promise<ParseExcelResult> {
       if (!Array.isArray(row)) continue;
 
       const rowStr = row.map((cell) => String(cell || '').toLowerCase().trim());
-      const hasNisn = rowStr.some((c) => c.includes('nisn') || c.includes('nip') || c.includes('no_induk') || c.includes('username'));
+      const hasNisn = rowStr.some((c) => c.includes('nisn') || c.includes('nip') || c.includes('induk') || c.includes('no_induk') || c.includes('username'));
       const hasName = rowStr.some((c) => c.includes('nama') || c.includes('name'));
 
       if (hasNisn || hasName) {
         headerRowIdx = r;
         // Map column indices
         rowStr.forEach((c, idx) => {
-          if (c.includes('nisn') || c.includes('nip') || c.includes('no_induk') || c.includes('username')) {
+          if (c.includes('nisn') || c.includes('nip') || c.includes('induk') || c.includes('no_induk') || c.includes('username')) {
             colIndices.nisn = idx;
           } else if (c.includes('nama') || c.includes('name')) {
             colIndices.name = idx;

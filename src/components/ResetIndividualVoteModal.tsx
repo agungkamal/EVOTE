@@ -62,7 +62,7 @@ export const ResetIndividualVoteModal: React.FC<ResetIndividualVoteModalProps> =
   const isTu = vType === 'TATA_USAHA';
 
   const typeLabel = isGuru ? 'Dewan Guru' : isTu ? 'Staf Tata Usaha' : 'Siswa';
-  const idLabel = isGuru ? 'NIP / NUPTK' : isTu ? 'NIP / ID Pegawai' : 'NISN';
+  const idLabel = 'NOMOR INDUK PEMILIH';
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

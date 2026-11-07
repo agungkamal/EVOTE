@@ -206,7 +206,7 @@ BEGIN
     FOR UPDATE;
 
     IF v_student_id IS NULL THEN
-        RETURN jsonb_build_object('success', false, 'message', 'Kredensial NISN/NIP atau PIN 6-Digit tidak cocok.');
+        RETURN jsonb_build_object('success', false, 'message', 'Kredensial Nomor Induk Pemilih atau PIN 6-Digit tidak cocok.');
     END IF;
 
     IF v_has_voted = true THEN

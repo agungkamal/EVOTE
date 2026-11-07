@@ -680,7 +680,7 @@ export const AdminSchoolSettings: React.FC<AdminSchoolSettingsProps> = ({
                 type="text"
                 value={schoolName}
                 onChange={(e) => setSchoolName(e.target.value)}
-                placeholder="Contoh: SMA Negeri 1 Harapan Bangsa"
+                placeholder="Contoh: SMKS PGRI 2 PALIMANAN"
                 className="w-full p-2.5 rounded-lg border border-slate-300 text-xs font-semibold"
                 required
               />
